@@ -1,0 +1,50 @@
+
+   /* GRafana Styles */
+
+   .grafana{
+    margin-top: 2rem;
+    text-align: center;
+  
+    font-size: 40px;
+  }
+  .grafana-btn1{
+    margin-top: 2rem;
+    margin-left: 3.5rem;
+    background-color: #333c46;
+    border: 1px solid grey;
+  }
+  .grafana-logs{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px;
+    padding: 40px;
+  
+  }
+  .grafana-btn2{
+  
+    margin-top: 2rem;
+    background-color: #333c46;
+    border: 1px solid grey;
+  }
+  .grafana-inp{
+    margin-left: 3.5px;
+    height: 5vh;
+    width: 300px;
+    border: 2px solid black;
+    border-radius: 5px;
+  }
+  .grafana-card{
+    margin: 0.5rem;
+    padding: 10px;
+    border: 1px solid rgb(119, 44, 44,0.8);
+    justify-content: space-between;
+    border-radius: 6px;
+  }
+  .grafana-inp1{
+    margin-left: 2rem;
+    height: 5vh;
+    width: 300px;
+    border: 2px solid black;
+    border-radius: 5px;
+  }

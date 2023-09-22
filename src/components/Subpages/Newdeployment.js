@@ -1,69 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../Subpages/Newdeployment.css';
+import axios from 'axios'; // Import Axios
 
-export default function Newdeployment() {
+
+const Newdeployment = () => {
+  const [jobName, setJobName] = useState("");
+  const [responseMessage, setResponseMessage] = useState('');
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/create-job", {
+        name: jobName,
+      });      
+
+      if (response.status === 200) {
+        // Display success message to the user.
+        setResponseMessage("jenkin job created successfully");
+      } else {
+        // Display error message to the user.
+        setResponseMessage('Error creating Jenkins job.');
+      }
+    } catch (error) {
+      // Display error message to the user.
+      console.log("Error while creating job by user:", error);
+      setResponseMessage('An error occurred while creating the Jenkins job.');
+    }
+  };
+
   return (
-    <>
-      <div className='newdeploy-page'>
-        <table className='newdeploy-table'>
-          
-          <tbody>
-            <form>
-            <tr>
-              <td><label htmlFor='name'>Name:</label></td>
-              <td><input type='text' /></td>
-            </tr>
-            <tr>
-              <td><label htmlFor='style'>Style:</label></td>
-              <td>
-              <select id='style'>
-                  <option value='default' selected>Select</option>
-                  <option value='option1'>Pipeline</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td><label htmlFor='url'>Build Trigger:</label></td>
-              <td>
-              <select id='style'>
-                  <option value='default' selected>Select</option>
-                  <option value='option1'>GitHub Hook</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td><label htmlFor='pipeline'>Pipeline:</label></td>
-              <td>
-              <select id='style'>
-                  <option value='default' selected>Select</option>
-                  <option value='option1'>Pipeline Script From SCM</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td><label htmlFor='scm'>SCM:</label></td>
-              <td><input type='text' /></td>
-            </tr>
-            <tr>
-              <td><label htmlFor='repourl'>Repository URL:</label></td>
-              <td><input type='text' /></td>
-            </tr>
-            <tr>
-              <td><label htmlFor='branch'>Branch:</label></td>
-              <td><input type='text' /></td>
-            </tr>
-            <tr>
-              <td><label htmlFor='scriptPath'>Script Path:</label></td>
-              <td><input type='text' /></td>
-            </tr>
-            </form>
-          </tbody>
-        </table>
-        <div className='deploy-btn'>
-          <button className='deploy-save'>Save</button>
-          <button className='deploy-apply'>Apply</button>
-        </div>
-      </div>
-    </>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Job name"
+        value={jobName}
+        onChange={(e) => setJobName(e.target.value)}
+      />
+      <button type="submit">Create job</button>
+      {responseMessage && <p>{responseMessage}</p>}
+    </form>
   );
-}
+};
+
+export default Newdeployment;
