@@ -314,10 +314,26 @@
   margin: auto;
 }
 
-.signout{
-  text-align: center;
-  justify-content: center;
-}
+
+
+
+  /* Sign Out Page CSS */
+
+  .signout-container{
+    font-size: 20px;
+    font-weight: 400;
+  
+    margin: 4rem;
+    border-radius: 10px;
+    background: linear-gradient(to right, #E30045, #9c448f);
+    padding: 60px;
+    text-align: center;
+    box-shadow: 2px 3px  2px;
+    color: #fff;
+  }
+  .signout-container button{
+    background-color: #5e0f0f;
+  }
 
 
 /* Cijob style */

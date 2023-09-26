@@ -9,7 +9,7 @@ const authRoute = require('./src/routes/authRoutes');
 const contactRoute = require('./src/routes/contactRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3004;
 
 // Middleware
 app.use(bodyParser.json());
@@ -25,7 +25,8 @@ app.use('/contact', contactRoute);
 // Enable CORS for your React app's origin
 app.use(
   cors({
-    origin: "http://localhost:3000", 
+   // origin: "http://localhost:3000", 
+   origin: "http://13.234.23.179:3001", 
     credentials: true,
   })
 );
@@ -264,76 +265,58 @@ app.get('/api/grafana', async(req, res) => {
   }
 })
 
+// Replace with your Jenkins server URL, username, and password
+const jenkinsUrl = 'http://13.234.23.179:8080/';
+const jenkinsUsername = 'DevOpsLD';
+const jenkinsPassword = '11be252343288acd8c015a80e700167d3f';
+
+app.use(express.json());
 
 // Endpoint to create a new Jenkins job
-app.post('/api/create-job', async (req, res) => {
+app.post('/create-job/:name', async (req, res) => {
   try {
-    const jenkinsUrl = 'http://13.234.23.179:8080';
-    const jobName = req.body.name; // Get the job name from the request body
+    const jobName = req.params.name; // Get the job name from the URL parameter
 
     // Configure the Jenkins authentication
     const auth = {
-      username: 'DevOpsLD',
-      password: '11be252343288acd8c015a80e700167d3f',
+      username: jenkinsUsername,
+      password: jenkinsPassword,
     };
 
-    // Fetch Jenkins crumb
+    // Fetch Jenkins crumb for CSRF protection (optional, but recommended)
     const crumbResponse = await axios.get(`${jenkinsUrl}/crumbIssuer/api/json`, {
       auth,
     });
 
     const crumb = crumbResponse.data.crumb;
 
-    // Define the XML request body
-    const requestBody = `
-      <project>
+    // Define the XML request body for the job configuration
+    const jobXml = `
+      <project> 
         <builders>
         </builders>
         <publishers>
         </publishers>
-        <buildWrappers>
+        <buildWrappers> 
         </buildWrappers>
       </project>
     `;
 
-    // Function to create the Jenkins job with retry logic
-    const retryRequest = async () => {
-      return await axios.post(`${jenkinsUrl}/createItem?name=${jobName}`, requestBody, {
-        headers: {
-          'Content-Type': 'application/xml',
-          'Jenkins-Crumb': crumb, // Include the crumb in the headers
-        },
-        auth,
-      });
-    };
+    // Make a POST request to create the Jenkins job
+    const response = await axios.post(`${jenkinsUrl}/createItem?name=${jobName}`, jobXml, {
+      headers: {
+        'Content-Type': 'application/xml',
+        'Jenkins-Crumb': crumb, // Include the crumb in the headers for CSRF protection
+      },
+      auth,
+    });
 
-    // Retry logic with a maximum of 3 retries
-    const response = await customRetry(retryRequest, { retries: 3 });
-
-    res.status(response.status).json(response.data);
+    res.status(response.status).json({ message: 'Jenkins job created successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while creating the Jenkins job.' });
   }
 });
-
-
-// Custom retry function to handle temporary failures
-const customRetry = async (fn, { retries, delay = 1000 }) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fn();
-      return response;
-    } catch (error) {
-      console.error(`Retry ${i + 1}/${retries} failed with error: ${error.message}`);
-      if (i < retries - 1) {
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-    }
-  }
-  throw new Error('Max retries reached');
-};
-
 
 //App running on port 
 app.listen(PORT, (err)=>{

@@ -9,7 +9,7 @@ const Newdeployment = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/create-job", {
+      const response = await axios.post("http://13.234.23.179:3004/api/create-job", {
         name: jobName,
       });      
 
