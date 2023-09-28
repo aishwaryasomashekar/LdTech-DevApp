@@ -1,7 +1,7 @@
 # base image
 FROM node:18.17.1
 
-WORKDIR /usr/app
+WORKDIR /backend
 
 COPY package*.json ./
 RUN npm install -qy
