@@ -4,10 +4,10 @@ FROM node:18.17.1
 WORKDIR /backend
 
 COPY package*.json ./
-RUN npm install -qy
+RUN npm install
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 6000
 
 CMD ["npm", "start"]
