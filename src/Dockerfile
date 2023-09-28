@@ -2,7 +2,7 @@
 FROM node:18.17.1
 
 # set working directory
-WORKDIR /usr/app
+WORKDIR /src
 
 COPY package*.json ./
 
@@ -17,7 +17,7 @@ RUN npm run build
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 7000
 
 RUN cp -R ./build /usr/build
 CMD ["http-server", "/usr/build", "-p 3000"]
